@@ -1,7 +1,6 @@
 import java.util.*;
 class Solution {
     public int[] solution(int[] numbers) {
-        List<Integer> ansList = new ArrayList<>();
         Set<Integer> numberSet = new TreeSet<>();
         
         for(int i = 0; i < numbers.length; i++) {
@@ -15,14 +14,11 @@ class Solution {
         }
         Iterator<Integer> numberIter = numberSet.iterator();
         
+        int[] answer = new int[numberSet.size()];
+        int count = 0;
         while(numberIter.hasNext()) {
-            ansList.add(numberIter.next());
-        }
-        
-        int[] answer = new int[ansList.size()];
-        
-        for (int i = 0; i < answer.length; i++) {
-            answer[i] = ansList.get(i);
+            answer[count] = numberIter.next();
+            count++;
         }
         
         return answer;
