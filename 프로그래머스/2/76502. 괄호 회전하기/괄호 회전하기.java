@@ -2,7 +2,7 @@ class Solution {
     public int solution(String s) {
         int answer = 0;
         String s2 = s;
-        String s3 = s2;
+        String s3 = s;
         
         for(int i = 0; i < s.length()-1; i++) {
             s3 = s2;
