@@ -1,31 +1,35 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.util.*;
+import java.io.*;
 
 public class Main {
-
+    
     public static void main(String[] args) throws IOException {
-
+        
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int[] A = new int[Integer.parseInt(br.readLine())];
-
-        for (int i = 0; i < A.length; i++) {
-            A[i] = Integer.parseInt(br.readLine());
+        int[] arr = new int[Integer.parseInt(br.readLine())];
+        
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = Integer.parseInt(br.readLine());
         }
         
-        for (int i = 0; i < A.length - 1; i++) {
+        int size = arr.length - 1;
+        
+        for (int i = 0; i < arr.length; i++) {
             
-            for (int j = 0; j < A.length - 1 - i; j++) {
-                if (A[j] > A[j + 1]) {
-                    int temp = A[j];
-                    A[j] = A[j + 1];
-                    A[j + 1] = temp;
+            for (int j = 0; j < size; j++) {
+                if (arr[j] > arr[j + 1]) {
+
+                    int tmp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = tmp;
                 }
             }
+            size--;
         }
         
-        for (int i = 0; i < A.length; i++) {
-            System.out.println(A[i]);
+        for (int i = 0; i < arr.length; i++) {
+            
+            System.out.println(arr[i]);
         }
     }
 }
