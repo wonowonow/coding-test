@@ -1,57 +1,56 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.io.*;
 
 public class Main {
-
-    static ArrayList<Integer>[] A;
+    
     static boolean[] visited;
-
+    static ArrayList<Integer>[] nodes;
+    
     public static void main(String[] args) throws IOException {
-
+        
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
-
-        A = new ArrayList[N + 1];
-        visited = new boolean[N + 1];
-
-        for (int i = 1; i < N + 1; i++) {
-            A[i] = new ArrayList<Integer>();
+        
+        int nodeCnt = Integer.parseInt(st.nextToken());
+        int edgeCnt = Integer.parseInt(st.nextToken());
+        int answer = 0;
+        
+        nodes = new ArrayList[nodeCnt + 1];
+        visited = new boolean[nodeCnt + 1];
+        
+        for (int i = 0; i < nodeCnt + 1; i++) {
+            nodes[i] = new ArrayList<Integer>();
         }
-
-        for (int i = 0; i < M; i++) {
+        
+        for (int i = 0; i < edgeCnt; i++) {
             st = new StringTokenizer(br.readLine());
-            int s = Integer.parseInt(st.nextToken());
-            int e = Integer.parseInt(st.nextToken());
-
-            A[s].add(e); // 양방향 엣지 -> 양쪽에 엣지 더하기
-            A[e].add(s);
+            int x = Integer.parseInt(st.nextToken());
+            int y = Integer.parseInt(st.nextToken());
+            nodes[x].add(y);
+            nodes[y].add(x);
         }
-
-        int count = 0;
-
-        for (int i = 1; i < N + 1; i++) {
+        
+        for (int i = 1; i < nodeCnt + 1; i++) {
             if (!visited[i]) {
-                count++;
-                DFS(i);
+                dfs(i);
+                answer++;
             }
         }
-
-        System.out.println(count);
+        
+        System.out.print(answer);
     }
-
-    static void DFS(int v) {
-        if (visited[v]) {
+    
+    public static void dfs(int now) {
+        
+        if (visited[now]) {
             return;
         }
-        visited[v] = true;
-        for (int i : A[v]) {
-            if (visited[i] == false) {
-                DFS(i);
+        visited[now] = true;
+        
+        for (int i : nodes[now]) {
+            
+            if (!visited[i]) {
+                dfs(i);
             }
         }
     }
