@@ -1,75 +1,83 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.io.*;
 
 public class Main {
-
-    static ArrayList<Integer>[] A;
+    
     static boolean[] visited;
-
+    static ArrayList<Integer>[] list;
+    static StringBuilder sb;
+    
     public static void main(String[] args) throws IOException {
+        
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        // 노드의 개수 N / 에지의 개수 M / 시작 번호 V
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
-        int V = Integer.parseInt(st.nextToken());
+        sb = new StringBuilder();
         
-        A = new ArrayList[N + 1];
+        int nodes = Integer.parseInt(st.nextToken());
+        int edges = Integer.parseInt(st.nextToken());
+        int start = Integer.parseInt(st.nextToken());
         
-        for (int i = 1; i <= N; i++) {
-            A[i] = new ArrayList<Integer>();
+        visited = new boolean[nodes + 1];
+        list = new ArrayList[nodes + 1];
+        
+        // 인접 리스트 초기화
+        for (int i = 0; i <= nodes; i++) {
+            list[i] = new ArrayList<Integer>();
         }
         
-        for (int i = 0; i < M; i++) {
+        // Node 연결 양방향
+        for (int i = 0; i < edges; i++) {
             st = new StringTokenizer(br.readLine());
-            int S = Integer.parseInt(st.nextToken());
-            int E = Integer.parseInt(st.nextToken());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
             
-            A[S].add(E);
-            A[E].add(S);
+            list[a].add(b);
+            list[b].add(a);
         }
         
-        for (int i = 1; i <= N; i++) {
-            Collections.sort(A[i]);
+        for (int i = 0; i <= nodes; i++) {
+            Collections.sort(list[i]);
         }
         
-        visited = new boolean[N + 1];
-        DFS(V);
-        System.out.println();
-        visited = new boolean[N + 1];
-        BFS(V);
-        System.out.println();
+        dfs(start);
+        visited = new boolean[nodes + 1];
+        sb.append("\n");
+        bfs(start);
+        System.out.print(sb.toString());
     }
     
-    public static void DFS(int node) {
-        System.out.print(node + " ");
-        visited[node] = true;
-        for (int i : A[node]) {
-            if (!visited[i]) {
-                DFS(i);
+    public static void dfs(int now) {
+        if (visited[now]) {
+            return;
+        }
+        
+        visited[now] = true;
+        sb.append(now + " ");
+        
+        for (int i = 0; i < list[now].size(); i++) {
+            
+            int next = list[now].get(i);
+            
+            if (!visited[next]) {
+                dfs(next);
             }
         }
     }
     
-    public static void BFS(int node) {
-        Queue<Integer> queue = new LinkedList<Integer>();
-        queue.add(node);
-        visited[node] = true;
+    public static void bfs(int start) {
+        Queue<Integer> q = new LinkedList<>();
+        q.add(start);
+        visited[start] = true;
         
-        while (!queue.isEmpty()) {
-            int nowNode = queue.poll();
-            System.out.print(nowNode + " ");
-            for (int i : A[nowNode]) {
+        while (!q.isEmpty()) {
+            int now = q.poll();
+            sb.append(now + " ");
+            
+            for (int i : list[now]) {
+                
                 if (!visited[i]) {
                     visited[i] = true;
-                    queue.add(i);
+                    q.add(i);
                 }
             }
         }
