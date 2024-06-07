@@ -13,8 +13,6 @@ class Solution {
         int curX = 0;
         int curY = 0;
         
-        List<String> wallLocation = new ArrayList<>();
-        
         for(int i = 0; i < park.length; i++) {
             
             for(int j = 0; j < park[i].length(); j++) {
@@ -25,7 +23,7 @@ class Solution {
             }
         }
         
-        for(int i = 0; i < routes.length; i++) {    
+        for(int i = 0; i < routes.length; i++) {
             String[] routeArr = routes[i].split(" ");
             String route = routeArr[0];
             int num = Integer.parseInt(routeArr[1]);
@@ -33,7 +31,7 @@ class Solution {
             int exX = curX;
             int exY = curY;
             
-            for(int j = 0; j < num; j++) {
+            for(int j = 1; j <= num; j++) {
                 
                 if(route.equals("E")) {
                     exX++;
@@ -54,7 +52,7 @@ class Solution {
                         break;
                     }
                     
-                    if(j == num-1) {
+                    if(j == num) {
                         curY = exY;
                         curX = exX;
                     }
@@ -65,6 +63,7 @@ class Solution {
         
         answer[0] = curY;
         answer[1] = curX;
+        
         return answer;
     }
 }
