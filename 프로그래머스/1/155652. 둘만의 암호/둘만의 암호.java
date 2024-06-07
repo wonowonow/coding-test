@@ -11,7 +11,6 @@ class Solution {
                         c = 'a';
                     } 
                 } while(skip.indexOf(c) != -1);
-                
                 count++;
             }
             
