@@ -14,7 +14,7 @@ class Solution {
                 if(i < scoreList.size()) {
                     appleBox[j] = scoreList.get(i);
                     i++;
-                }
+                }//
             }
             answer += appleBox[appleBox.length-1] * m;
         }
