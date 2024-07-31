@@ -27,7 +27,7 @@ class Solution {
     }
     
     public boolean canMiddle(int brown, int yellow, int[] size) {
-        // 24, 24 / 3, 16
+        
         int needBrownMin = (size[0] * 2) + (size[1] * 2) - 4;
         int needYellowMin = size[0] * size[1] - needBrownMin;
         
