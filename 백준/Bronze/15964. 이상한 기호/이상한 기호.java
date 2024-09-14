@@ -6,8 +6,8 @@ public class Main {
         
         Scanner sc = new Scanner(System.in);
         
-        int A = sc.nextInt();
-        int B = sc.nextInt();
+        Long A = sc.nextLong();
+        Long B = sc.nextLong();
         
         System.out.print((A+B) * (A-B));
     }
