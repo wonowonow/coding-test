@@ -20,16 +20,19 @@ public class Main {
         
         for (int i = 0; i < arr.length - 1; i++) {
             
-            if (!check) {
-                for (int j = i + 1; j < arr.length; j++) {
+            if (check) {
+                break;
+            }
+            for (int j = i + 1; j < arr.length; j++) {
 
-                    if (sum - (arr[i] + arr[j]) == 100) {
-                        spy1 = i;
-                        spy2 = j;
-                        break;
-                    }
+                if (sum - (arr[i] + arr[j]) == 100) {
+                    spy1 = i;
+                    spy2 = j;
+                    check = true;
+                    break;
                 }
             }
+            
         }
         
         for (int i = 0; i < 9; i++) {
