@@ -5,27 +5,19 @@ public class Main {
     public static void main(String[] args) {
         
         Scanner sc = new Scanner(System.in);
-        Map<Character, Integer> map = new HashMap<>();
-        
-        for (int i = 'a'; i <= 'z'; i++) {
-            map.put((char)i, 0);
-        }
+        int[] arr = new int[26];
         
         int cnt = sc.nextInt();
         
         for (int i = 0; i < cnt; i++) {
-            char first = sc.next().charAt(0);
-            
-            map.put(first, map.get(first) + 1);
+            int first = sc.next().charAt(0) - 'a';
+            arr[first]++;
         }
         
         StringBuilder sb = new StringBuilder();
-        for (char key : map.keySet()) {
-            
-            int value = map.get(key);
-            if (value >= 5) {
-                
-                sb.append(key);
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] >= 5) {
+                sb.append((char)(i + 'a'));
             }
         }
         
