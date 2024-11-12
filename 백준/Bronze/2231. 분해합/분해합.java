@@ -12,9 +12,11 @@ public class Main {
             
             String str = String.valueOf(i);
             int sum = i;
-            for (char c : str.toCharArray()) {
+            int num = i;
+            while (num > 0) {
                 
-                sum += Integer.parseInt(String.valueOf(c));
+                sum += num % 10;
+                num /= 10;
             }
             
             if (sum == target) {
