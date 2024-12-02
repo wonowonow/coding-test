@@ -73,9 +73,10 @@ public class Main {
             }
 
             for (int i = 0; i < 4; i++) {
-
-                int[] dr = move(nrx, nry, i);
+                
                 int[] db = move(nbx, nby, i);
+                int[] dr = move(nrx, nry, i);
+                
 
                 if (board[db[0]][db[1]] == 'O') { // 블루는 들어가면 안 된다.
                     continue;
