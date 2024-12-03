@@ -5,7 +5,6 @@ public class Main {
     
     static int[] dx = {1, -1, 0, 0};
     static int[] dy = {0, 0, 1, -1};
-    static int[][] board;
     static boolean[][] visited;
 
     public static void main(String[] args) throws IOException {
@@ -16,14 +15,13 @@ public class Main {
         int x = Integer.parseInt(st.nextToken());
         int y = Integer.parseInt(st.nextToken());
 
-        board = new int[x][y];
         visited = new boolean[x][y];
 
         for (int i = 0; i < x; i++) {
             st = new StringTokenizer(br.readLine());
-            String arr[] = st.nextToken().split("");
+            String str = st.nextToken();
             for (int j = 0; j < y; j++) {
-                board[i][j] = Integer.parseInt(arr[j]);
+                visited[i][j] = str.charAt(j) == '1' ? false : true;
             }
         }
 
@@ -41,7 +39,7 @@ public class Main {
         while (!q.isEmpty()) {
             Node now = q.poll();
 
-            if (now.x == board.length - 1 && now.y == board[0].length - 1) {
+            if (now.x == visited.length - 1 && now.y == visited[0].length - 1) {
                 answer = now.cnt;
                 break;
             }
@@ -49,9 +47,9 @@ public class Main {
             for (int i = 0; i < 4; i++) {
                 int nx = now.x + dx[i];
                 int ny = now.y + dy[i];
-                if (nx < board.length && nx >= 0 && ny < board[0].length && ny >= 0) {
+                if (nx < visited.length && nx >= 0 && ny < visited[0].length && ny >= 0) {
 
-                    if (!visited[nx][ny] && board[nx][ny] != 0) {
+                    if (!visited[nx][ny]) {
                         visited[nx][ny] = true;
                         q.add(new Node(nx, ny, now.cnt + 1));
                     }
