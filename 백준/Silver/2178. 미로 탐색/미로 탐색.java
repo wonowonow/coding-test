@@ -1,4 +1,5 @@
 import java.util.*;
+import java.io.*;
 
 public class Main {
     
@@ -7,29 +8,26 @@ public class Main {
     static int[][] board;
     static boolean[][] visited;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
-        Scanner sc = new Scanner(System.in);
-
-        int x = sc.nextInt();
-        int y = sc.nextInt();
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        
+        int x = Integer.parseInt(st.nextToken());
+        int y = Integer.parseInt(st.nextToken());
 
         board = new int[x][y];
         visited = new boolean[x][y];
 
-        sc.nextLine();
-
         for (int i = 0; i < x; i++) {
-
-            String str = sc.nextLine();
-
+            st = new StringTokenizer(br.readLine());
+            String arr[] = st.nextToken().split("");
             for (int j = 0; j < y; j++) {
-                board[i][j] = Integer.parseInt(String.valueOf(str.charAt(j))); // 이거 어케했더라
+                board[i][j] = Integer.parseInt(arr[j]);
             }
         }
 
         System.out.print(bfs());
-
     }
 
 
@@ -38,24 +36,24 @@ public class Main {
         int answer = 0;
         Queue<Node> q = new LinkedList<>();
 
-        q.add(new Node(0, 0, 0));
+        q.add(new Node(0, 0, 1));
 
         while (!q.isEmpty()) {
             Node now = q.poll();
 
             if (now.x == board.length - 1 && now.y == board[0].length - 1) {
-                answer = now.cnt + 1;
+                answer = now.cnt;
                 break;
             }
 
             for (int i = 0; i < 4; i++) {
-                if (now.x + dx[i] < board.length && now.x + dx[i] >= 0 &&
-                        now.y + dy[i] < board[0].length && now.y + dy[i] >= 0) {
+                int nx = now.x + dx[i];
+                int ny = now.y + dy[i];
+                if (nx < board.length && nx >= 0 && ny < board[0].length && ny >= 0) {
 
-                    if (!visited[now.x + dx[i]][now.y + dy[i]] &&
-                            board[now.x + dx[i]][now.y + dy[i]] != 0) {
-                        visited[now.x + dx[i]][now.y + dy[i]] = true;
-                        q.add(new Node(now.x + dx[i], now.y + dy[i], now.cnt + 1));
+                    if (!visited[nx][ny] && board[nx][ny] != 0) {
+                        visited[nx][ny] = true;
+                        q.add(new Node(nx, ny, now.cnt + 1));
                     }
                 }
             }
