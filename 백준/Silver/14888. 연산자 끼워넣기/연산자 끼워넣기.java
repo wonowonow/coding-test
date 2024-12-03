@@ -12,27 +12,24 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        // 주어지는 숫자의 갯수
         int size = Integer.parseInt(st.nextToken());
         numbers = new int[size];
-        // 주어지는 숫자
+        
         st = new StringTokenizer(br.readLine());
         for (int i = 0; i < size; i++) {
             numbers[i] = Integer.parseInt(st.nextToken());
         }
-        // 덧셈 뺄셈 곱셈 나눗셈 갯수
+        
         st = new StringTokenizer(br.readLine());
         for (int i = 0; i < 4; i++) {
             maths[i] = Integer.parseInt(st.nextToken());
         }
 
-        // 하기 전 answers 초기화
         answers[0] = Integer.MIN_VALUE;
         answers[1] = Integer.MAX_VALUE;
 
         dfs(numbers[0], 0, maths[0], maths[1], maths[2], maths[3]);
-
-        // 정답 출력
+        
         for (int i = 0; i < 2; i++) {
             System.out.println(answers[i]);
         }
@@ -51,13 +48,13 @@ public class Main {
 
         if (plus > 0) {
             dfs(sum + numbers[depth], depth, plus - 1, minus, multi, div);
-        } 
+        }
         if (minus > 0) {
             dfs(sum - numbers[depth], depth, plus, minus - 1, multi, div);
-        } 
+        }
         if (multi > 0) {
             dfs(sum * numbers[depth], depth, plus, minus, multi - 1, div);
-        } 
+        }
         if (div > 0) {
             dfs(sum / numbers[depth], depth, plus, minus, multi, div - 1);
         }
