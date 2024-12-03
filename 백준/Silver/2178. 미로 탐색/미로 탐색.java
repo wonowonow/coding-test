@@ -1,78 +1,77 @@
 import java.util.*;
 
 public class Main {
-
-    static Queue<Node> q = new LinkedList<>();
-    static int[][] arr;
+    
+    static int[] dx = {1, -1, 0, 0};
+    static int[] dy = {0, 0, 1, -1};
+    static int[][] board;
     static boolean[][] visited;
-    static int[] dx = {1, 0, -1, 0};
-    static int[] dy = {0, 1, 0, -1};
 
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
 
-        int N = sc.nextInt();
-        int M = sc.nextInt();
-        arr = new int[N][M];
-        visited = new boolean[N][M];
+        int x = sc.nextInt();
+        int y = sc.nextInt();
 
-        for (int i = 0; i < N; i++) {
-            String str = sc.next();
-            String[] sArr = str.split("");
-            for (int j = 0; j < M; j++) {
-                arr[i][j] = Integer.parseInt(sArr[j]);
-                visited[i][j] = false;
+        board = new int[x][y];
+        visited = new boolean[x][y];
+
+        sc.nextLine();
+
+        for (int i = 0; i < x; i++) {
+
+            String str = sc.nextLine();
+
+            for (int j = 0; j < y; j++) {
+                board[i][j] = Integer.parseInt(String.valueOf(str.charAt(j))); // 이거 어케했더라
             }
         }
 
-        System.out.println(bfs());
+        System.out.print(bfs());
+
     }
+
 
     public static int bfs() {
 
-        int cnt = 1;
+        int answer = 0;
+        Queue<Node> q = new LinkedList<>();
 
-        q.add(new Node(0, 0));
-        visited[0][0] = true;
+        q.add(new Node(0, 0, 0));
+
         while (!q.isEmpty()) {
+            Node now = q.poll();
 
-            int qSize = q.size();
+            if (now.x == board.length - 1 && now.y == board[0].length - 1) {
+                answer = now.cnt + 1;
+                break;
+            }
 
-            for (int i = 0; i < qSize; i++) {
+            for (int i = 0; i < 4; i++) {
+                if (now.x + dx[i] < board.length && now.x + dx[i] >= 0 &&
+                        now.y + dy[i] < board[0].length && now.y + dy[i] >= 0) {
 
-                Node node = q.poll();
-
-                for (int j = 0; j < 4; j++) {
-
-                    int nx = dx[j] + node.x;
-                    int ny = dy[j] + node.y;
-                    if (nx >= 0 && nx < arr[0].length && ny >= 0 && ny < arr.length) {
-                        if (!visited[ny][nx] && arr[ny][nx] == 1) {
-                            q.add(new Node(nx, ny));
-                            visited[ny][nx] = true;
-                        }
-
-                        if (ny == arr.length - 1 && nx == arr[0].length - 1) {
-                            return cnt + 1;
-                        }
+                    if (!visited[now.x + dx[i]][now.y + dy[i]] &&
+                            board[now.x + dx[i]][now.y + dy[i]] != 0) {
+                        visited[now.x + dx[i]][now.y + dy[i]] = true;
+                        q.add(new Node(now.x + dx[i], now.y + dy[i], now.cnt + 1));
                     }
                 }
             }
-            cnt++;
         }
 
-        return 0;
+        return answer;
     }
 
-    static class Node {
+    public static class Node {
 
-        int x;
-        int y;
+        int x, y, cnt;
 
-        public Node (int x, int y) {
+        public Node(int x, int y, int cnt) {
             this.x = x;
             this.y = y;
+            this.cnt = cnt;
         }
     }
 }
