@@ -30,14 +30,7 @@ public class Main {
         answers[0] = Integer.MIN_VALUE;
         answers[1] = Integer.MAX_VALUE;
 
-        for (int i = 0; i < maths.length; i++) {
-
-            if (maths[i] > 0) {
-                maths[i]--;
-                dfs(numbers[0], 1, i);
-                maths[i]++;
-            }
-        }
+        dfs(numbers[0], 0, maths[0], maths[1], maths[2], maths[3]);
 
         // 정답 출력
         for (int i = 0; i < 2; i++) {
@@ -46,32 +39,27 @@ public class Main {
 
     }
 
-    public static void dfs(int sum, int depth, int type) {
-        // 주어진 수의 순서를 바꾸면 안 된다.
-        // depth 가 있는 이유
-        if (type == 0) {
-            sum += numbers[depth];
-        } else if (type == 1) {
-            sum -= numbers[depth];
-        } else if (type == 2) {
-            sum *= numbers[depth];
-        } else if (type == 3) {
-            sum /= numbers[depth];
-        }
+    public static void dfs(int sum, int depth, int plus, int minus, int multi, int div) {
 
         if (depth == numbers.length - 1) {
             answers[0] = Math.max(answers[0], sum);
             answers[1] = Math.min(answers[1], sum);
             return;
         }
+        
+        depth++;
 
-        for (int i = 0; i < maths.length; i++) {
-
-            if (maths[i] > 0) {
-                maths[i]--;
-                dfs(sum, depth + 1, i);
-                maths[i]++;
-            }
+        if (plus > 0) {
+            dfs(sum + numbers[depth], depth, plus - 1, minus, multi, div);
+        } 
+        if (minus > 0) {
+            dfs(sum - numbers[depth], depth, plus, minus - 1, multi, div);
+        } 
+        if (multi > 0) {
+            dfs(sum * numbers[depth], depth, plus, minus, multi - 1, div);
+        } 
+        if (div > 0) {
+            dfs(sum / numbers[depth], depth, plus, minus, multi, div - 1);
         }
     }
 }
