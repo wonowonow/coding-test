@@ -2,112 +2,70 @@ import java.util.*;
 
 class Solution {
     
+    static int[] dx = {1, -1, 0, 0};
+    static int[] dy = {0, 0, 1, -1};
     static boolean[][] visited;
-    static TeamAndCnt[][] remember;
-    static int teamCnt = 0;
+    static int[][] team;
+    static ArrayList<Integer> teamScore = new ArrayList<>();
+    static int xSize, ySize;
+    
     
     public int solution(int[][] land) {
-        int answer = Integer.MIN_VALUE;
-        remember = new TeamAndCnt[land.length][land[0].length];
+        xSize = land.length;
+        ySize = land[0].length;
+        visited = new boolean[xSize][ySize];
+        team = new int[xSize][ySize];
+        int teamNumber = 1;
         
-        for (int i = 0; i < land[0].length; i++) {
-            
-            visited = new boolean[land.length][land[0].length];
-            List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < xSize; i++) {
+            for (int j = 0; j < ySize; j++) {
+                if (!visited[i][j] && land[i][j] == 1) {
+                    teamScore.add(dfs(1, i, j, land, teamNumber));
+                    teamNumber++;
+                }
+            }
+        }
+        
+        int answer = 0;
+        
+        for (int i = 0; i < ySize; i++) {
             int sum = 0;
-            int t = -1;
-            
-            for (int j = 0; j < land.length; j++) {
-                
-                if (land[j][i] == 1 && !visited[j][i]) {
-                    list.add(bfs(land, i, j));
+            boolean[] check = new boolean[teamNumber];
+            for (int j = 0; j < xSize; j++) {
+                int t = team[j][i];
+                if (t != 0 && !check[t]) {
+                    sum += teamScore.get(t - 1);
+                    check[t] = true;
+                    continue;
                 }
-                
-                if (remember[j][i] != null && remember[j][i].cnt > 0 && !visited[j][i]) {
-                    
-                    if (t == remember[j][i].team) {
-                        continue;
-                    }
-                    t = remember[j][i].team;
-                    list.add(remember[j][i].cnt);
-                }
-                
             }
-            
-            for (int num : list) {
-                sum += num;
-            }
-            
             answer = Math.max(answer, sum);
         }
         
         return answer;
     }
     
-    public int bfs(int[][] land, int x, int y) {
-        int cnt = 1;
-        Queue<Node> q = new LinkedList<>();
-        Queue<NodeTeam> rq = new LinkedList<>();
-        visited[y][x] = true;
-        q.add(new Node(x, y));
-        int[] dx = {0, 1, 0, -1};
-        int[] dy = {1, 0, -1, 0};
+    public int dfs(int cnt, int x, int y, int[][] land, int teamNumber) {
         
-        while(!q.isEmpty()) {
+        team[x][y] = teamNumber;
+        visited[x][y] = true;
+        
+        for (int i = 0; i < 4; i++) {
+            int nx = dx[i] + x;
+            int ny = dy[i] + y;
             
-            Node now = q.poll();
-            
-            for (int i = 0; i < 4; i++) {
-                int nx = now.x + dx[i];
-                int ny = now.y + dy[i];
-                
-                if (nx >= 0 && nx < land[0].length && ny >= 0 && ny < land.length && land[ny][nx] == 1 && !visited[ny][nx]) {
-                    q.add(new Node(nx, ny));
-                    rq.add(new NodeTeam(new Node(nx, ny), teamCnt));
-                    visited[ny][nx] = true;
-                    cnt++;
-                }
+            if (nx < 0 || ny < 0 || nx >= xSize || ny >= ySize) {
+                continue;
             }
+            
+            if (visited[nx][ny] || land[nx][ny] == 0) {
+                continue;
+            }
+            
+            cnt = dfs(cnt + 1, nx, ny, land, teamNumber);
         }
         
-        while(!rq.isEmpty()) {
-            NodeTeam nodeTeam = rq.poll();
-            Node node = nodeTeam.node;
-            remember[node.y][node.x] = new TeamAndCnt(teamCnt, cnt);
-        }
-        
-        teamCnt++;
         
         return cnt;
-    }
-    
-    class Node {
-        int x;
-        int y;
-        
-        public Node(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-    }
-    
-    class NodeTeam {
-        Node node;
-        int team;
-        
-        public NodeTeam(Node node, int team) {
-            this.node = node;
-            this.team = team;
-        }
-    }
-    
-    class TeamAndCnt {
-        int team;
-        int cnt;
-        
-        public TeamAndCnt(int team, int cnt) {
-            this.team = team;
-            this.cnt = cnt;
-        }
     }
 }
