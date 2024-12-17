@@ -7,22 +7,15 @@ public class Main {
         int n = new Scanner(System.in).nextInt();
         Queue<Integer> q = new LinkedList<>();
         
-        
         for (int i = 1; i <= n; i++) {
-            
             q.add(i);
         }
-        int last = 0;
-        while(!q.isEmpty()) {
-            
-            if (q.size() == 1) {
-                last = q.poll();
-                break;
-            }
+        
+        while(q.size() > 1) {
             q.poll();
             q.add(q.poll());
         }
         
-        System.out.print(last);
+        System.out.print(q.poll());
     }
 }
