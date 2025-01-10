@@ -16,10 +16,10 @@ public class Main {
         LinkedList<Integer>[] arr = new LinkedList[T];
 
         for (int i = 0; i < T; i++) {
-            String[] strs = br.readLine().split("");
+            String str = br.readLine();
             arr[i] = new LinkedList<>();
-            for (int j = 0; j < strs.length; j++) {
-                arr[i].add(Integer.parseInt(strs[j]));
+            for (int j = 0; j < 8; j++) {
+                arr[i].add(str.charAt(j) - '0');
             }
         }
 
@@ -58,7 +58,7 @@ public class Main {
             }
         }
 
-        System.out.println(Arrays.stream(arr).map(list -> list.get(0)).reduce(0, Integer::sum));
+        System.out.println(Arrays.stream(arr).mapToInt(list -> list.get(0)).sum());
     }
 
     public static void goLeft(LinkedList<Integer> list) {
