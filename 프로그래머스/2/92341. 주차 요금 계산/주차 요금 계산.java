@@ -2,92 +2,50 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int[] fees, String[] records) {
+        int[] answer = {};
+        TreeMap<String, Integer> map = new TreeMap<>();
+        recordTime(records, map);
+        return getTotalFees(fees, map);
+    }
+    
+    public int[] getTotalFees(int[] fees, Map<String, Integer> map) {
         
-        Map<String, Car> db = new HashMap<>(); // "차량번호" / 시간 및 주차 여부
-        List<Car> list = new ArrayList<>();
-        
-        for (String record : records) {
-            
-            String[] details = record.split(" ");
-            String[] times = details[0].split(":");
-            int hour = Integer.parseInt(times[0]) * 60;
-            int minute = Integer.parseInt(times[1]);
-            int time = hour + minute;
-            
-            String carNumber = details[1];
-            
-            String con = details[2];
-            
-            if (db.containsKey(carNumber)) {
-                Car car = db.get(carNumber);
-                
-                if (con.equals("IN")) {
-                    car = new Car(carNumber, time, car.totalTime, true, car.totalPrice);
-                } else {
-                    car = new Car(carNumber, time, car.totalTime + time - car.time, false, car.totalPrice);
-                }
-                
-                db.put(carNumber, car);
-            } else {
-                db.put(carNumber, new Car(carNumber, time, 0, true, 0));
+        // 0: 기본 시간 1: 기본 요금 2: 단위 시간 3: 단위 요금
+        int[] totalFees = new int[map.size()];
+        int idx = 0;
+        for (int time : map.values()) {
+            int sum = 0;
+            if (time <= 0) { // 출차 된 적이 없다면
+                time += 1439; // 23:59 에 나갔다고 가정
             }
+            time -= fees[0]; // 기본 주차 선 계산
+            sum += fees[1];
+            if (time > 0) {
+                if (time % fees[2] == 0) { // 단위 시간이랑 딱 맞으면
+                    sum += (time / fees[2]) * fees[3];
+                } else { // 안 맞으면 올림
+                    sum += (time / fees[2] + 1) * fees[3];
+                }
+            }
+            totalFees[idx++] = sum;
         }
-        
-        for (String carNumber : db.keySet()) {
-            Car car = db.get(carNumber);
-            int totalPrice = valetCal(fees, car);
-            
-            list.add(new Car(carNumber, car.time, car.totalTime, false, totalPrice));
-        }
-        
-        int[] answer = new int[list.size()];
-        Collections.sort(list, (o1, o2) -> {
-            return Integer.parseInt(o1.number) - Integer.parseInt(o2.number);
-        });
-        
-        for (int i = 0; i < answer.length; i++) {
-            answer[i] = list.get(i).totalPrice;
-        }
-        
-        return answer;
+        return totalFees;
     }
     
-    public int valetCal(int[] fees, Car car) {
-        int result = 0;
-        int totalTime = car.totalTime;
-        if (car.isValet) {
-            totalTime = totalTime + (24 * 60 - 1) - car.time;
+    public void recordTime(String[] records, Map<String, Integer> map) {
+        // 차의 총 입-출차 시간 계산
+        for (String record : records) {
+            String[] split = record.split(" ");
+            int time = getTime(split[0]);
+            if (split[2].equals("IN")) {
+                time *= -1; // 입차 (음) - 출차 (양) = 무조건 양
+            }
+            map.put(split[1], map.getOrDefault(split[1], 0) + time);
         }
-        
-        if (totalTime <= fees[0]) {
-            return fees[1];
-        }
-        
-        int quotient = (totalTime - fees[0]) / fees[2];
-        int remainder = (totalTime - fees[0]) % fees[2];
-
-        if (remainder > 0) {
-            quotient++;
-        }
-
-        result = fees[1] + (quotient * fees[3]);
-        
-        return result;
     }
     
-    class Car {
-        String number;
-        int time;
-        int totalTime;
-        boolean isValet;
-        int totalPrice;
-        
-        public Car(String number, int time, int totalTime, boolean isValet, int totalPrice) {
-            this.number = number;
-            this.time = time;
-            this.totalTime = totalTime;
-            this.isValet = isValet;
-            this.totalPrice = totalPrice;
-        }
+    public int getTime(String time) {
+        String[] split = time.split(":");
+        return Integer.parseInt(split[0]) * 60 + Integer.parseInt(split[1]);
     }
 }
